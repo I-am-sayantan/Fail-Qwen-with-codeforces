@@ -11,12 +11,6 @@ This repository contains an original competitive programming problem designed to
 ```bash
 # Run all tests
 python test_runner.py
-
-# Expected output:
-# Correct solution: All tests PASS ✓
-# run_01.py: FAIL (timeout + wrong answers)
-# run_02.py: FAIL (bitmask errors)
-# run_03.py: FAIL (counting bugs)
 ```
 
 ## Repository Structure
