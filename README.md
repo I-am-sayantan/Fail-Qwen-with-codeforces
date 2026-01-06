@@ -93,6 +93,6 @@ Not found on Codeforces, LeetCode, or AtCoder. Requires understanding from multi
 - **Memory Limit**: 256 MB
 - **Constraints**: 1 ≤ n ≤ 5
 
-##License
+## License
 
 Educational purposes.

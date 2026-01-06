@@ -1,3 +1,24 @@
+"""
+Binary Image Tensor Gate Decomposition - Correct Solution
+
+This is the reference solution for the Binary Image Tensor Gate Decomposition problem.
+It correctly decomposes an n×n binary image into rank-1 tensors combined with logic gates.
+
+Algorithm:
+1. Check if the target matrix is rank-1 (outer product of two binary vectors)
+2. If rank-1, count all distinct (r, c) vector pairs that produce the target
+3. If not rank-1, try combining two rank-1 tensors with AND/OR/XOR gates
+4. Count all distinct minimal decompositions
+
+Key Features:
+- Uses correct outer product definition: T[i][j] = r[i] AND c[j]
+- Enumerates all possible binary vector pairs (2^n × 2^n)
+- Tries all three gate operations (AND, OR, XOR) for rank-2 decomposition
+- Handles edge cases: zero matrix (rank 0), single pixels, identity matrix
+
+Complexity: O(2^(4n) × n²) - feasible for n ≤ 5
+"""
+
 MOD = 10**9 + 7
 
 def outer_product(r, c):
