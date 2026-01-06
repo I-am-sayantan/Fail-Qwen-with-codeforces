@@ -1,0 +1,102 @@
+import sys
+from collections import defaultdict
+
+def matrix_to_tuple(matrix):
+    return tuple(tuple(row) for row in matrix)
+
+def tuple_to_matrix(t):
+    return [list(row) for row in t]
+
+def apply_gate(A, B, gate):
+    n = len(A)
+    result = [[0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            if gate == 'AND':
+                result[i][j] = A[i][j] & B[i][j]
+            elif gate == 'OR':
+                result[i][j] = A[i][j] | B[i][j]
+            else:  # XOR
+                result[i][j] = A[i][j] ^ B[i][j]
+    return matrix_to_tuple(result)
+
+def generate_rank1_matrices(n):
+    # Generate all rank-1 matrices and count representations
+    rank1_count = defaultdict(int)
+    
+    # All possible row vectors (2^n)
+    for r_mask in range(1 << n):
+        r = [(r_mask >> i) & 1 for i in range(n)]
+        # All possible column vectors (2^n)
+        for c_mask in range(1 << n):
+            c = [(c_mask >> j) & 1 for j in range(n)]
+            # Create rank-1 matrix
+            mat = [[r[i] & c[j] for j in range(n)] for i in range(n)]
+            mat_t = matrix_to_tuple(mat)
+            rank1_count[mat_t] += 1
+    
+    return rank1_count
+
+def solve():
+    MOD = 10**9 + 7
+    
+    n = int(input().strip())
+    target = []
+    for _ in range(n):
+        row = list(map(int, input().split()))
+        target.append(row)
+    target_t = matrix_to_tuple(target)
+    
+    # Special case: all zeros matrix
+    all_zeros = [[0] * n for _ in range(n)]
+    all_zeros_t = matrix_to_tuple(all_zeros)
+    
+    # Generate all rank-1 matrices
+    rank1_count = generate_rank1_matrices(n)
+    
+    # dp[k][matrix] = number of ways to create matrix with k rank-1 tensors
+    dp = [defaultdict(int) for _ in range(n + 2)]  # n+2 to be safe
+    
+    # Initialize with k=1
+    for mat, count in rank1_count.items():
+        dp[1][mat] = (dp[1][mat] + count) % MOD
+    
+    # If target is already achievable with k=1
+    if dp[1][target_t] > 0:
+        print(1)
+        print(dp[1][target_t] % MOD)
+        return
+    
+    # Try k from 2 to n (Boolean rank is at most n)
+    max_k = min(n * n, 10)  # Upper bound, though n should be enough
+    
+    for k in range(2, max_k + 1):
+        # Try all ways to split k into i + (k-i)
+        for i in range(1, k):
+            j = k - i
+            for mat_a, count_a in dp[i].items():
+                if count_a == 0:
+                    continue
+                for mat_b, count_b in dp[j].items():
+                    if count_b == 0:
+                        continue
+                    
+                    A = tuple_to_matrix(mat_a)
+                    B = tuple_to_matrix(mat_b)
+                    
+                    # Apply all three gates
+                    for gate in ['AND', 'OR', 'XOR']:
+                        result_mat = apply_gate(A, B, gate)
+                        ways = (count_a * count_b) % MOD
+                        dp[k][result_mat] = (dp[k][result_mat] + ways) % MOD
+        
+        if dp[k][target_t] > 0:
+            print(k)
+            print(dp[k][target_t] % MOD)
+            return
+    
+    # If we get here, something's wrong, but for completeness:
+    print(n * n)
+    print(0)
+
+solve()
