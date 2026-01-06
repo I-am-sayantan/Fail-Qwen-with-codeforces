@@ -101,7 +101,7 @@ BINARY IMAGE TENSOR GATE DECOMPOSITION - TEST RESULTS
 
 ## Originality and Related Work
 
-To ensure this problem is original and not merely a rephrasing of existing problems, extensive research was conducted into related mathematical concepts.
+To ensure this problem is original and not merely a rephrasing of existing problems, I did deep research using chatgpt.
 
 ### Related Concepts in Literature
 
